@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "CitiesServlet", urlPatterns = {"/cities/ajax"})
 public class CitiesServlet extends HttpServlet {
 
-    public static final String GET_CITIES = "getCities";
+    public static final String GET_CITIES = "get_cities";
     
     public static final String COMMAND_PARAMETER = "command";
     

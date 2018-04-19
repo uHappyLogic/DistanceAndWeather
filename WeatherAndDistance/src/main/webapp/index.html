@@ -6,24 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Show me Weather</title>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <style>
-            body, html {
-                margin: 0px;
-                padding: 0px;
-                height: 90%;
-                width: 100%;
-            }
-            
-            #map {
-             height: 100%;
-             width: 100%;
-            }
-            
-            #wrapper { position: relative; height: 100%; width: 100%;}
-            #over_map_top { position: absolute; top: 10px; left: 50%; z-index: 99; }
-            #over_map_bottom { position: absolute; top: 98%px; left: 50%; z-index: 99; }
-
-         </style>
+        <link rel="styleSheet" type="text/css" href="css/index.css">
     </head>
 
     <body>
@@ -33,18 +16,63 @@
             </div>
 
             <div id="over_map_top">
-                <div id="top-form">
-                    <button type="button">Click Me!</button>
+                <div class="dropdown">
+                    <button id="city-button" onclick="myFunction()" class="dropbtn">Select city</button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a class="dropbtnopt" href="#">Link 1</a>
+                        <a class="dropbtnopt" href="#">Link 2</a>
+                        <a class="dropbtnopt" href="#">Link 3</a>
+                    </div>
                 </div>
             </div>
             
             <div id="over_map_bottom">
-                <div id="top-form">
-                    <button type="button">Click Me!</button>
-                </div>
+                
             </div>
          </div>
         
+        <script>
+            function loadCities() {
+                $.getJSON('cities/ajax', {'command': 'get_cities'}, function (data) {
+                    var dropdown = $("#myDropdown");
+                    
+                    $.each(data, function (i, city) {
+                        $('<a>', { 
+                            "class": 'dropbtnopt',
+                            text : city
+                        }).appendTo(dropdown)
+                    })
+                })
+            };
+            
+            function myFunction() {
+                document.getElementById("myDropdown").classList.toggle("show");
+            }
+
+            window.onclick = function(event) {
+                if (event.target.matches('.dropbtnopt')) {
+                    var cityButton = document.getElementById('city-button');
+                    var cityName = event.target.innerHTML;
+                    
+                    cityButton.innerHTML = cityName;
+                    
+                    // reset dropdown
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+            
+            $(document).ready(function () {
+                loadCities();
+            });
+        </script>
         <script>
             function initMap() {
               var uluru = {lat: -25.363, lng: 131.044};
@@ -61,7 +89,7 @@
               });
             };
         </script>
-            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAc2HFm1gVsGgu1kSOGkVuO-iv5wSc_KA&callback=initMap">
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAc2HFm1gVsGgu1kSOGkVuO-iv5wSc_KA&callback=initMap">
         </script>
     </body>
 </html>
