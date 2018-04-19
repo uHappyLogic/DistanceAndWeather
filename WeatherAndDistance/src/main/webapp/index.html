@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Show me Weather</title>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <style>
+            body, html {
+                margin: 0px;
+                padding: 0px;
+                height: 90%;
+                width: 100%;
+            }
+            
+            #map {
+             height: 100%;
+             width: 100%;
+            }
+            
+            #wrapper { position: relative; height: 100%; width: 100%;}
+            #over_map_top { position: absolute; top: 10px; left: 50%; z-index: 99; }
+            #over_map_bottom { position: absolute; top: 98%px; left: 50%; z-index: 99; }
+
+         </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div id="map">
+
+            </div>
+
+            <div id="over_map_top">
+                <div id="top-form">
+                    <button type="button">Click Me!</button>
+                </div>
+            </div>
+            
+            <div id="over_map_bottom">
+                <div id="top-form">
+                    <button type="button">Click Me!</button>
+                </div>
+            </div>
+         </div>
+        
+        <script>
+            function initMap() {
+              var uluru = {lat: -25.363, lng: 131.044};
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: uluru,
+                streetViewControl: false,
+                mapTypeControl: false
+              });
+              
+              var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+              });
+            };
+        </script>
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAc2HFm1gVsGgu1kSOGkVuO-iv5wSc_KA&callback=initMap">
+        </script>
+    </body>
+</html>
