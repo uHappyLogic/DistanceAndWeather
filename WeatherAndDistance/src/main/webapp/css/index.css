@@ -11,21 +11,38 @@ and open the template in the editor.
 body, html {
     margin: 0px;
     padding: 0px;
-    height: 90%;
+    height: 98%;
     width: 100%;
 }
 
 #map {
  height: 100%;
  width: 100%;
+ z-index: 1;
 }
 
 #wrapper { position: relative; height: 100%; width: 100%;}
 #over_map_top { position: absolute; top: 10px; left: 50%; z-index: 99; }
-#over_map_bottom { position: absolute; top: 98%px; left: 50%; z-index: 99; }
+#over_map_bottom { position: absolute; top: 100px; left: 5%; z-index: 99; }
+
+#dropdown_bottom {
+    show: true;
+}
+
+#floating-panel {
+  position: absolute;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
 
 /* Dropdown Button */
-.dropbtn {
+.dropbtn, .dropbtnopt_bottom {
     background-color: #3498DB;
     color: white;
     padding: 16px;
@@ -50,7 +67,7 @@ body, html {
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    min-width: 160px;
+    min-width: 260px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }

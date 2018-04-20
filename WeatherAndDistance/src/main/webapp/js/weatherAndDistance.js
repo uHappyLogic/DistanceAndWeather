@@ -1,4 +1,5 @@
 var map;
+var marker = null;
 
 function initMap() {
     var uluru = {lat: -25.363, lng: 131.044};
@@ -52,16 +53,25 @@ window.onclick = function(event) {
 
 function generateInfo(cityName) {
     
-    var uluru = {lat: 50.363, lng: 131.044};
-    
-    map.setCenter(uluru);
-    marker = new google.maps.Marker({
-        position: uluru,
-        map: map
-    });
-    
     $.getJSON('cities/ajax', {'command': 'get_info', 'city_name': cityName}, function (data) {
-        alert(data)
+        var loc = {lat: data.lat, lng: data.lng};
+        
+        map.setCenter(loc);
+        
+        
+        if (marker !== null){
+            marker.setMap(null);
+        }
+        
+        marker = new google.maps.Marker({
+            position: loc,
+            map: map
+        });
+        
+        google.maps.event.trigger(map, 'resize');
+       
+        document.getElementById('distance_text').innerHTML = "Disatnce from PG ETI " + data.distance;
+        document.getElementById("my_dropdown_bottom").classList.toggle("show");
     })
 };
 

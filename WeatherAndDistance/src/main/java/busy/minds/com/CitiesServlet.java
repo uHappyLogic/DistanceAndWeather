@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +24,7 @@ public class CitiesServlet extends HttpServlet {
     public static final String COMMAND_PARAMETER = "command";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, RuntimeException, InterruptedException {
         
         String command = request.getParameter(COMMAND_PARAMETER);
         
@@ -40,13 +42,25 @@ public class CitiesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (RuntimeException ex) {
+            Logger.getLogger(CitiesServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CitiesServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (RuntimeException ex) {
+            Logger.getLogger(CitiesServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CitiesServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -61,32 +75,43 @@ public class CitiesServlet extends HttpServlet {
         response.getWriter().write(citiesJson);
     }
     
-    private void processGetInfo(HttpServletRequest request, HttpServletResponse response) throws RuntimeException, IOException {
-        try
+    private void processGetInfo(HttpServletRequest request, HttpServletResponse response) throws RuntimeException, IOException, InterruptedException {
+        int tries = 3;
+        while (tries > 0)
         {
-            String cityName = request.getParameter("city_name");
-
-            DistansModel model = new RestCallHandler().getDistanceJson(cityName);
-            GeoCodeModel coords = new RestCallHandler().getCoords(cityName);
-
-            String distance = model.getRows().get(0).getElements().get(0).getDistance().getText();
-
-            Location location = coords.getResults().get(0).getGeometry().getLocation();
-            String locationField = String.format("%s,%s", String.valueOf(location.getLat()), String.valueOf(location.getLng()));
-
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            JsonObject json = new JsonObject();
-            json.addProperty("distance", distance);
-            json.addProperty("location", locationField);
+            tries -= 1;
             
-            String jsonResponse = new Gson().toJson(json);
+            DistansModel model;
+            GeoCodeModel coords;
             
-            response.getWriter().write(jsonResponse);
-        }catch(Exception e) {
-            response.getWriter().write(e.getMessage());
+            try
+            {
+                String cityName = request.getParameter("city_name");
+
+                model = new RestCallHandler().getDistanceJson(cityName);
+                coords = new RestCallHandler().getCoords(cityName);
+
+                String distance = model.getRows().get(0).getElements().get(0).getDistance().getText();
+
+                Location location = coords.getResults().get(0).getGeometry().getLocation();
+
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                JsonObject json = new JsonObject();
+                json.addProperty("distance", distance);
+                json.addProperty("lat", location.getLat());
+                json.addProperty("lng", location.getLng());
+                String jsonResponse = new Gson().toJson(json);
+
+                response.getWriter().write(jsonResponse);
+                return;
+            }catch(Exception e) {
+                System.err.println(e.getMessage());
+                Thread.sleep(100);
+            }
         }
+        
+        response.setStatus(response.SC_INTERNAL_SERVER_ERROR);
     }
 }
