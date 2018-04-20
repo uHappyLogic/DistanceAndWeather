@@ -4,27 +4,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Show me Weather</title>
+        <title>Show me Weather and Distance</title>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script type="text/javascript" src="js/weatherAndDistance.js"></script>
         <link rel="styleSheet" type="text/css" href="css/index.css">
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAc2HFm1gVsGgu1kSOGkVuO-iv5wSc_KA&callback=initMap"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADfl1JRmHc_xDp6xk0K0DGL0IPgme4Ays&callback=initMap"></script>
     </head>
 
     <body>
         <div id="wrapper">
-            <div id="map">
-
-            </div>
+            <div id="map"></div>
 
             <div id="over_map_top">
                 <div class="dropdown">
-                    <button id="city-button" onclick="myFunction()" class="dropbtn">Select city</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a class="dropbtnopt" href="#">Link 1</a>
-                        <a class="dropbtnopt" href="#">Link 2</a>
-                        <a class="dropbtnopt" href="#">Link 3</a>
-                    </div>
+                    <button id="selected-city-button" onclick="myFunction()" class="dropbtn">Select city</button>
+                    <div id="myDropdown" class="dropdown-content"></div>
                 </div>
             </div>
             

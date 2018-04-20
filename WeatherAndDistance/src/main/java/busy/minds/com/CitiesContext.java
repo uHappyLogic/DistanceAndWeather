@@ -13,8 +13,8 @@ public class CitiesContext {
     public static List<String> getCities() {
         return Arrays.asList(
                 "Bydgoszcz",
-                "Poznan"
+                "Poznan",
+                "Warszawa"
         );
     }
-    
 }
