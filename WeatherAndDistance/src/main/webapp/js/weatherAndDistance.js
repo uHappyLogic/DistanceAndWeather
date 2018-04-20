@@ -15,7 +15,9 @@ function initMap() {
 function loadCities() {
     $.getJSON('cities/ajax', {'command': 'get_cities'}, function (data) {
         var dropdown = $("#myDropdown");
-
+        
+        dropdown.empty();
+        
         $.each(data, function (i, city) {
             $('<a>', { 
                 "class": 'dropbtnopt',
@@ -26,11 +28,13 @@ function loadCities() {
 };
 
 function myFunction() {
+    loadCities();
     document.getElementById("myDropdown").classList.toggle("show");
 }
 
 window.onclick = function(event) {
     if (event.target.matches('.dropbtnopt')) {
+        
         var cityButton = document.getElementById('selected-city-button');
         var cityName = event.target.innerHTML;
 
@@ -71,11 +75,13 @@ function generateInfo(cityName) {
         google.maps.event.trigger(map, 'resize');
        
         document.getElementById('distance_text').innerHTML = "Disatnce from PG ETI " + data.distance;
+        document.getElementById('weather_text').innerHTML = data.weather;
+        
         document.getElementById("my_dropdown_bottom").classList.toggle("show");
     })
 };
 
 $(document).ready(function () {
-    loadCities();
+    
 });
             

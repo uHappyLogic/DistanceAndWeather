@@ -7,6 +7,7 @@ package busy.minds.com;
 
 import busy.minds.com.dist.DistansModel;
 import busy.minds.com.geo.GeoCodeModel;
+import busy.minds.com.weather.WeatherModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -52,10 +53,13 @@ public class RestCallHandler {
         return model;
     }
 
-//    JsonElement getWeather(String cityName) throws IOException {
-//        String url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + ",pl";
-//        return getJson(url, "2508abecb6d9037229e719a6adc445af");
-//    }
+    WeatherModel getWeather(String cityName) throws IOException {
+        String url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + ",pl&APPID=2508abecb6d9037229e719a6adc445af";
+        
+        WeatherModel model = (WeatherModel)new Caller(WeatherModel.class).getJson(url, null);
+        
+        return model;
+    }
     
     private class Caller<T>{
         
@@ -72,7 +76,7 @@ public class RestCallHandler {
             conn = (HttpURLConnection)url.openConnection();  
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("apikey", apiKey);
+            //conn.setRequestProperty("apikey", apiKey);
 
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("HTTP GET Request Failed with Error code : "

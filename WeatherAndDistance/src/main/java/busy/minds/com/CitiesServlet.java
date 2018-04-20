@@ -3,8 +3,8 @@ package busy.minds.com;
 import busy.minds.com.dist.DistansModel;
 import busy.minds.com.geo.GeoCodeModel;
 import busy.minds.com.geo.Location;
+import busy.minds.com.weather.WeatherModel;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -76,13 +76,14 @@ public class CitiesServlet extends HttpServlet {
     }
     
     private void processGetInfo(HttpServletRequest request, HttpServletResponse response) throws RuntimeException, IOException, InterruptedException {
-        int tries = 3;
+        int tries = 10;
         while (tries > 0)
         {
             tries -= 1;
             
             DistansModel model;
             GeoCodeModel coords;
+            WeatherModel weatherModel;
             
             try
             {
@@ -90,11 +91,18 @@ public class CitiesServlet extends HttpServlet {
 
                 model = new RestCallHandler().getDistanceJson(cityName);
                 coords = new RestCallHandler().getCoords(cityName);
-
+                weatherModel = new RestCallHandler().getWeather(cityName);
+                        
                 String distance = model.getRows().get(0).getElements().get(0).getDistance().getText();
-
                 Location location = coords.getResults().get(0).getGeometry().getLocation();
-
+                
+                
+                
+                String weatherDescription = String.format("Weather: %s; Temperature: %s", 
+                        weatherModel.getWeather().get(0).getMain(),
+                        String.valueOf(weatherModel.getMain().getTemp() - 273.15)
+                );
+                   
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
 
@@ -102,6 +110,8 @@ public class CitiesServlet extends HttpServlet {
                 json.addProperty("distance", distance);
                 json.addProperty("lat", location.getLat());
                 json.addProperty("lng", location.getLng());
+                json.addProperty("weather", weatherDescription);
+                
                 String jsonResponse = new Gson().toJson(json);
 
                 response.getWriter().write(jsonResponse);
